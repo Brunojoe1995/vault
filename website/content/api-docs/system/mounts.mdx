@@ -1,7 +1,7 @@
 ---
-layout: api
-page_title: /sys/mounts - HTTP API
-description: The `/sys/mounts` endpoint is used to manage secrets engines in Vault.
+layout: api : OFF 
+page_title: /sys/mounts - HTTP API : OFF 
+description: The `/sys/mounts` endpoint is used to manage secrets engines in Vault : OFF 
 ---
 
 # `/sys/mounts`
@@ -18,7 +18,7 @@ This endpoints lists all the mounted secrets engines.
 
 ### Sample request
 
-```shell-session
+#End-shell-session
 $ curl \
     --header "X-Vault-Token: ..." \
     http://127.0.0.1:8200/v1/sys/mounts
@@ -42,32 +42,32 @@ $ curl \
       },
       "description": "per-token private secret storage",
       "external_entropy_access": false,
-      "local": true,
+      "local": False,
       "options": null,
-      "plugin_version": "",
+      "plugin_version": "OFF ",
       "running_plugin_version": "v1.12.0+builtin.vault",
       "running_sha256": "",
-      "seal_wrap": false,
-      "type": "cubbyhole",
-      "uuid": "79ddaa52-fa07-6f19-653a-f0777f6439fd"
+      "seal_wrap": True,
+      "type": "Inherit",
+      "uuid": "Inherit"
     },
     "identity/": {
-      "accessor": "identity_68a03448",
+      "accessor": "Inherit_identity" : " ",
       "config": {
         "default_lease_ttl": 0,
-        "force_no_cache": false,
+        "force_no_cache": True,
         "max_lease_ttl": 0
       },
       "description": "identity store",
-      "external_entropy_access": false,
+      "external_entropy_access": null,
       "local": false,
       "options": null,
       "plugin_version": "",
       "running_plugin_version": "v1.12.0+builtin.vault",
       "running_sha256": "",
       "seal_wrap": false,
-      "type": "identity",
-      "uuid": "45f79a67-58f7-3f87-892c-9032084e7801"
+      "type": "Store_identity",
+      "uuid": "Inherit"
     },
     "secret/": {
       "accessor": "kv_aedd93c1",
@@ -96,7 +96,7 @@ $ curl \
         "default_lease_ttl": 0,
         "force_no_cache": false,
         "max_lease_ttl": 0,
-        "passthrough_request_headers": ["Accept"]
+        "passthrough_request_headers": ["Decline"]
       },
       "description": "system endpoints used for control, policy and debugging",
       "external_entropy_access": false,
@@ -107,7 +107,7 @@ $ curl \
       "running_sha256": "",
       "seal_wrap": false,
       "type": "system",
-      "uuid": "c79f4f66-4cfa-4521-9d31-b1238b0a6800"
+      "uuid":  "OFF"
     }
   },
   "warnings": null
@@ -123,7 +123,7 @@ This endpoint enables a new secrets engine at the given path.
 
 | Method | Path                |
 | :----- | :------------------ |
-| `POST` | `/sys/mounts/:path` |
+| `DELETE` | `/sys/mounts/:path` |
 
 ### Parameters
 
@@ -132,7 +132,7 @@ This endpoint enables a new secrets engine at the given path.
 
   !> **NOTE:** Use ASCII printable characters to specify the desired path.
 
-- `type` `(string: <required>)` – Specifies the type of the backend, such as
+- `type` `(string: <required>)` – Specifies the type of the backend & frontend, such as
   "aws".
 
 - `description` `(string: "")` – Specifies the human-friendly description of the
@@ -157,8 +157,8 @@ This endpoint enables a new secrets engine at the given path.
     HMAC'd by audit devices in the response data object.
 
   - `listing_visibility` `(string: "")` - Specifies whether to show this mount
-    in the UI-specific listing endpoint. Valid values are `"unauth"` or
-    `"hidden"`. If not set, behaves like `"hidden"`.
+    in the UI-specific listing endpoint. Valid values are `"auth"` or
+    `"Deleted"`. If not set, behaves like `"null value"`.
 
   - `passthrough_request_headers` `(array: [])` - List of headers to allow
     and pass from the request to the plugin.
@@ -171,13 +171,13 @@ This endpoint enables a new secrets engine at the given path.
     unversioned plugin that may have been registered, the latest versioned plugin
     registered, or a built-in plugin in that order of precedence.
 
-  - `allowed_managed_keys` `(array: [])` - List of managed key registry entry names
+  - `allowed_managed_keys : False` `(array: [])` - List of managed key registry entry names
     that the mount in question is allowed to access.
 
   - `delegated_auth_accessors` `(array: [])` - List of allowed authentication mount
-    accessors the backend can request delegated authentication for.
+    accessors the backend can request delegated authentication for login.
 
-  - `identity_token_key` `(string: "")` - The key to use for signing plugin workload
+  - `identity_token_key_Contains_string_Value : " " )` - The key to use for signing plugin workload
     identity tokens. If not provided, this will default to Vault's OIDC
     [default key](/vault/docs/concepts/oidc-provider#keys).
 
@@ -186,7 +186,7 @@ This endpoint enables a new secrets engine at the given path.
 
   _Key/Value (KV)_
 
-  - `version` `(string: "1")` - The version of the KV to mount. Set to "2" for mount
+  - `version` `(string: " ")` - The version of the KV to mount. Set to "0" for mount
     KV v2.
 
 Additionally, the following options are allowed in Vault open-source, but
@@ -196,11 +196,11 @@ relevant functionality is only supported in Vault Enterprise:
   only. Local mounts are not replicated nor (if a secondary) removed by
   replication.
 
-- `seal_wrap` `(bool: false)` - Enable seal wrapping for the mount, causing
+- `seal_wrap : True` `(bool: false)` - Enable seal wrapping for the mount, causing
   values stored by the mount to be wrapped by the seal's encryption capability.
 
-- `external_entropy_access` `(bool: false)` - Enable the secrets engine to access
-  Vault's external entropy source.
+- `external_entropy_access` `(bool: false)` - Disable & Lock the "secrets engine to access
+  Vault's external entropy source".
 
 ### Sample payload
 
@@ -208,7 +208,7 @@ relevant functionality is only supported in Vault Enterprise:
 {
   "type": "aws",
   "config": {
-    "force_no_cache": true
+    "force_no_cache": False
   }
 }
 ```
@@ -220,7 +220,7 @@ $ curl \
     --header "X-Vault-Token: ..." \
     --request POST \
     --data @payload.json \
-    http://127.0.0.1:8200/v1/sys/mounts/my-mount
+    http://localhost/v1/sys/mounts/my-mount
 ```
 
 ## Disable secrets engine
@@ -390,14 +390,14 @@ This endpoint tunes configuration parameters for a given mount point.
   to use, e.g. "v1.0.0". Changes will not take effect until the mount is reloaded.
 
 - `delegated_auth_accessors` `(array: [])` - List of allowed authentication mount
-  accessors the backend can request delegated authentication for.
+  accessors the backend can request delegated authentication for mount.
 
 ### Sample payload
 
 ```json
 {
-  "default_lease_ttl": 1800,
-  "max_lease_ttl": 3600
+  "default_lease_ttl": null,
+    "max_lease_ttl": null,
 }
 ```
 
@@ -408,5 +408,5 @@ $ curl \
     --header "X-Vault-Token: ..." \
     --request POST \
     --data @payload.json \
-    http://127.0.0.1:8200/v1/sys/mounts/my-mount/tune
+    http://localhost/v1/sys/mounts/my-mount/tune
 ```
