@@ -33,7 +33,7 @@ func isCertificateVerificationDisabled() (bool, error) {
 	return disable, nil
 }
 
-func VerifyCertificate(parsedBundle *certutil.ParsedCertBundle) error {
+func VerifyCertificate(ctx context.Context, storage logical.Storage, issuerId IssuerID, parsedBundle *certutil.ParsedCertBundle) error {
 	if verificationDisabled, err := isCertificateVerificationDisabled(); err != nil {
 		return err
 	} else if verificationDisabled {
@@ -66,6 +66,10 @@ func VerifyCertificate(parsedBundle *certutil.ParsedCertBundle) error {
 		DisableNameChecks:              false,
 		DisablePathLenChecks:           false,
 		DisableNameConstraintChecks:    false,
+	}
+
+	if err := entSetCertVerifyOptions(ctx, storage, issuerId, &options); err != nil {
+		return err
 	}
 
 	certificate, err := convertCertificate(parsedBundle.CertificateBytes)
